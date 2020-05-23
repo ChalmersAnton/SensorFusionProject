@@ -1,0 +1,6 @@
+DESCRIPTION OF LOG FILES CONFIGURATIONS
+
+R = eye(3); Sensors used in app: Gyroscope, magnetometer, accelerometer, orientation; Filter estimation: Only gyroscope.
+sensorLog_20200522T103114
+sensorLog_20200523T085738_face_up_then_moved
+sensorLog_20200523T085923_face_side_then_moved
