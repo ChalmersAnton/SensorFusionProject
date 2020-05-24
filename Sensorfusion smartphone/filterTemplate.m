@@ -29,6 +29,10 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
   % Add your filter settings here.
   Rw = eye(3);
   T = 0.01;
+%   file_name = 'sensorLog_20200523T085738_face_up_then_moved.txt';
+%   log = readtable(['LogFiles/' file_name]);
+%   log.Properties.VariableNames = {'Time', 'Sensor', 'X', 'Y', 'Z'};
+%   log_array =  table2array(log(:,3:5));
   % Current filter state.
   x = [1; 0; 0 ;0];
   P = eye(nx, nx);
@@ -64,6 +68,14 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       % within the next 5 ms are concurrent (suitable for sampling
       % in 100Hz).
       data = server.getNext(5);
+%       try
+%         l = log_array([1 2 3 4]+4*counter,:)';
+%         data = l(:);
+%       catch e
+%         fprintf(['End of log file!\n']);
+%         break
+%       end
+
 
       if isnan(data(1))  % No new data received
         continue;        % Skips the rest of the look

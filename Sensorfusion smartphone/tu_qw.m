@@ -2,7 +2,7 @@ function [x, P] = tu_qw(x, P, omega, T, Rw)
 %       Inputs:
 %       x      - [n x 1] Prior mean
 %       P      - [n x n] Prior covariance
-%       omega  - [m x 1] measured angular rate
+%       omega  - [m x 1] Measured angular rate
 %       T      - [1 x 1] Time since last measurement
 %       Rw     - [m x m] Process noise covariance
 

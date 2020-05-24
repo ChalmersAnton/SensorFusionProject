@@ -198,3 +198,44 @@ title('Magnetometer - signals')
 subplot(1,3,3)
 plot(mag(3,:))
 xlabel('Z')
+
+%% READ LOG FILES
+% % Used for visualization.
+% figure;
+% subplot(1, 2, 1);
+% ownView = OrientationView('Own filter', gca);  % Used for visualization.
+% googleView = [];
+% 
+log = readtable(...
+    'LogFiles/sensorLog_20200523T085738_face_up_then_moved.txt');
+% log.Properties.VariableNames = {'Time', 'Sensor', 'X', 'Y', 'Z'};
+% log(1:20, :);
+% log(1,3:5);
+% counter = 1;
+% log_array =  table2array(log(:,3:5));
+% while 1
+%     try
+%         l = log_array([1 2 3 4]+4*counter,:)';
+%         data = l(:)';
+%     catch e
+%         fprintf(['End of log file!\n']);
+%         break
+%     end
+%     counter = counter + 1;
+%     orientation = data(1, 18:21)';  % Google's orientation estimate.
+% 
+%     % Visualize result
+%     if rem(counter, 10) == 0
+%     setOrientation(ownView, x(1:4));
+%     title(ownView, 'OWN', 'FontSize', 16);
+%     if ~any(isnan(orientation))
+%         if isempty(googleView)
+%         subplot(1, 2, 2);
+%         % Used for visualization.
+%         googleView = OrientationView('Google filter', gca);
+%         end
+%         setOrientation(googleView, orientation);
+%         title(googleView, 'GOOGLE', 'FontSize', 16);
+%     end
+%     end
+% end
