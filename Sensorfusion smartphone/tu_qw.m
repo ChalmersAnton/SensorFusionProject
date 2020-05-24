@@ -13,7 +13,9 @@ function [x, P] = tu_qw(x, P, omega, T, Rw)
 F = (eye(4) + 1/2*T*Somega(omega));
 G = 1/2*T*Sq(x); 
 
-x = F*x;
+% The mean is additive, x = F*x + G*v, but since v is zero mean mu_v = 0
+mu_v = [0 0 0]';
+x = F*x + G*mu_v;
 
 P = F*P*F' + G*Rw*G';
 

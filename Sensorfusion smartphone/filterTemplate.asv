@@ -92,17 +92,16 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       acc = data(1, 2:4)';
       if ~any(isnan(acc))  % Acc measurements are available.
         % Do something
-        if abs(norm(acc(:)) - 9.81) < 0.05*9.81
+        if (norm(acc(:)) - 9.81) < 0.3
             [x, P] = mu_g(x, P, acc, Ra, g0);
             [x, P] = mu_normalizeQ(x, P); % Normalize quaternion
-            accOut = 0;
-        else
             accOut = 1;
+        else
+            accOut = 0;
         end
       else
           accOut = [];
       end
-
       gyr = data(1, 5:7)';
       if ~any(isnan(gyr))  % Gyro measurements are available.
         % Do something
