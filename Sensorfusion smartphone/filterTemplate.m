@@ -27,6 +27,7 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
   t0 = [];  % Initial time (initialize on first data received)
   nx = 4;   % Assuming that you use q as state variable.
   % Add your filter settings here.
+  % GYRO
   Rw_LS = 1.0e-05 * [
     0.1823,    0.0081,   -0.0039
     0.0081,    0.1243,    0.0001
@@ -38,12 +39,25 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
   Rw = Rw_NLS;
   T = 0.01;
   
+  % ACC
   mean_acc = [0.1466, 0.6111, 9.7942]';
   g0 = mean_acc;
   Ra =[
     0.0485,    0.0012,   -0.0768
     0.0012,    0.0014,   -0.0053
    -0.0768,   -0.0053,    0.1427];
+
+  % MAG
+  mean_mag = [-46.2139, 72.7131, 39.7617]';
+  
+  m0 = [0, norm(mean_mag(1:2)), mean_mag(3)]';
+  Rm = [
+    0.7181,    0.0697,    0.0421
+    0.0697,    0.7859,    0.0459
+    0.0421,    0.0459,    0.8313];
+  
+  alpha = 0.05;
+  L = 0;
 
   % Current filter state.
   x = [1; 0; 0 ;0];
@@ -115,6 +129,16 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
       mag = data(1, 8:10)';
       if ~any(isnan(mag))  % Mag measurements are available.
         % Do something
+        L = (1 - alpha)*L + alpha*norm(mag);
+        if abs(norm(mag(:)) - L) < 0.05*L
+            [x, P] = mu_m(x, P, mag, m0, Rm);
+            [x, P] = mu_normalizeQ(x, P); % Normalize quaternion
+            magOut = 0;
+        else
+            magOut = 1;
+        end
+      else
+          magOut = [];
       end
       
       [x, P] = mu_normalizeQ(x, P); % Normalize quaternion
@@ -126,6 +150,9 @@ function [xhat, meas] = filterTemplate(calAcc, calGyr, calMag)
         setOrientation(ownView, x(1:4));
         if ~isempty(accOut)
           ownView.setAccDist(accOut)
+        end
+        if ~isempty(magOut)
+          ownView.setAccDist(magOut)
         end
         title(ownView, 'OWN', 'FontSize', 16);
         if ~any(isnan(orientation))
